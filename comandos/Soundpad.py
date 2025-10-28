@@ -9,7 +9,7 @@ class Soundpad(commands.Cog):
 
     @commands.command(name="sons")
     async def sons(self, ctx):
-        await ctx.send(f"[{prefixo}risada | {prefixo}porta| {prefixo}uh | {prefixo}disse | {prefixo}ronaldo]")
+        await ctx.send(f"[{prefixo}risada | {prefixo}porta | {prefixo}uh | {prefixo}disse | {prefixo}ronaldo] (Caso queira sugerir, mande com !request (nome do som))")
 
     @commands.command(name="risada")
     async def risada(self, ctx):

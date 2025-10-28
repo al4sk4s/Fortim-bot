@@ -1,6 +1,8 @@
-import json
 import os
+import json
+import random
 import dotenv
+import asyncio
 import winsound
 import threading
 from twitchio.ext import commands
@@ -18,13 +20,14 @@ with open('config.json', 'r') as f:
 
 if not os.path.exists('.env'):
     with open('.env', 'w') as h:
-        h.write('TOKEN=\nCHANNEL=\nPREFIX=!')
+        h.write('TOKEN=\nCHANNEL=\nPREFIX=!\nWEBHOOK=\n')
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
 token = os.getenv("TOKEN")
 canal = os.getenv("CHANNEL")
 prefixo = os.getenv("PREFIX")
+webhook = os.getenv("WEBHOOK")
 
 if os.getenv(token) == "":
     print("Você precisa escrever no .env o seu token TMI, acesse https://twitchtokengenerator.com/ para saber mais.")
@@ -60,6 +63,17 @@ class Bot(commands.Bot):
                     print(f"🔹 Carregado comando: {arquivo}")
                 except Exception as e:
                     print(f"⚠️ Falha ao carregar {arquivo}: {e}")
+        
+        asyncio.create_task(self.auto_msg_loop())
+    
+    async def auto_msg_loop(self):
+        while True:
+            await asyncio.sleep(10 * 60)  # 10 minutos
+            if canal:
+                with open('mensagens.txt', 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                    if lines:
+                        await bot.connected_channels[0].send(random.choice(lines).strip()) # .strip() to remove newline characters
 
     async def event_message(self, message):
         if message.echo:
